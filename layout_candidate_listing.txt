@@ -1,0 +1,72 @@
+/***********************************************************************************
+* name:     layout_candidate_listing.txt
+* purpose:  Information related to candidates. For files from 2007 and later, go to
+*           the Elections folder. Candidate information for primary, special, and 
+*           General elections are combined together into a single csv file.
+* updated:  03/15/2022
+* format:   tab delimited 
+***********************************************************************************/
+
+------------------------------------------------------------------------------------
+-- File layout: from 01/01/2022  (see: https://dl.ncsbe.gov/?prefix=Elections/)
+------------------------------------------------------------------------------------
+name                    data type          description
+------------------------------------------------------------------------------------
+election_dt             char(10)           election date
+county_name             char(20)           county name
+contest_name            char(60)           contest name 
+name_on_ballot          char(60)           candidate name on ballot
+first_name              char(20)           candidate first name
+middle_name             char(20)           candidate middle name
+last_name               char(25)           candidate last name
+name_suffix_lbl         char(4)            candidate name suffix
+nick_name               char(20)           candidate nick name
+street_address          char(75)           cancatenated mailing or residential street address
+city                    char(30)           mailing or residential address city name
+state                   char(2)            mailing or residential address state
+zip_code                char(9)            mailing or residential address zip code
+phone                   char(10)           phone number (if available)
+office_phone            char(10)           office phone number (if available)
+business_phone          char(10)           business phone number (if available)
+email                   char(60)           candidate email address (if available).  
+candidacy_dt            char(10)           date person registered to be candidate for office
+party_contest           char(3)            contest party 
+party_candidate         char(3)            party affiliation of candidate
+is_unexpired            char(5)            is the office term unexpired (TRUE/FALSE)
+has_primary             char(5)            is primary for election date (TRUE/FALSE)
+is_partisan             char(5)            is partisan contest  (TRUE/FALSE)
+vote_for                char(1)            number of persons that can vote for - for this office
+term                    char(1)            length of term in office (years)
+------------------------------------------------------------------------------------
+
+
+------------------------------------------------------------------------------------
+-- File layout: between 01/01/2007 and 12/31/2021 
+------------------------------------------------------------------------------------
+name                    data type          description
+------------------------------------------------------------------------------------
+election_dt             char(10)           election date
+county_name             char(20)           county name
+contest_name            char(60)           contest name 
+name_on_ballot          char(60)           candidate name on ballot
+first_name              char(20)           candidate first name
+middle_name             char(20)           candidate middle name
+last_name               char(25)           candidate last name
+name_suffix_lbl         char(4)            candidate name suffix
+nick_name               char(20)           candidate nick name
+street_address          char(75)           cancatenated mailing or residential street address
+city                    char(30)           mailing or residential address city name
+state                   char(2)            mailing or residential address state
+zip_code                char(9)            mailing or residential address zip code
+phone                   char(10)           phone number (if available)
+office_phone            char(10)           office phone number (if available)
+business_phone          char(10)           business phone number (if available)
+candidacy_dt            char(10)           date person registered to be candidate for office
+party_contest           char(3)            contest party 
+party_candidate         char(3)            party affiliation of candidate
+is_unexpired            char(5)            is the office term unexpired (TRUE/FALSE)
+has_primary             char(5)            is primary for election date (TRUE/FALSE)
+is_partisan             char(5)            is partisan contest  (TRUE/FALSE)
+vote_for                char(1)            number of persons that can vote for - for this office
+term                    char(1)            length of term in office (years)
+------------------------------------------------------------------------------------
