@@ -3,18 +3,19 @@ Hispanic candidates in North Carolina for the Nov. 2022 election.
 
 ## The News & Observer did this project to obtain a statewide list of all Hispanic or Latino candidates on the ballot in the Nov. 2022 election. 
 
-The N&O obtained this list of candidates by joining the North Carolina State Board of Election's current 'Statewide Voter Registration' database with its '2022 Candidate List Spreadsheet (CSV) (with email addresses)' database.
+The News & Observer did this project to obtain a statewide list of all Hispanic or Latino candidates on the ballot in the November 2022 election.
 
-The candidate list database does not include what ethnicity candidates identify with, while the voter registration database does. This merging of databases cross-checks which candidates identified as Hispanic or Latino in their voter rolls.
+The N&O obtained this list of candidates by joining the North Carolina State Board of Elections' current 'Statewide Voter Registration' database with its '2022 Candidate List Spreadsheet (CSV) (with email addresses)' database.
+
+The candidate list database does not include what ethnicity candidates identify with, while the voter registration database does. This merging of databases shows which candidates identified as Hispanic or Latino in their voter registration.
 
 To view the final list of candidates you can open the file 'final-results-hl-candidates-nov-22.csv' linked in this project or clone this repository.
 
-The merge of databases is done via "fuzzy matching" on the names column with a .1 match system, which means some of the candidates listed in this csv. file are not exact matches. This was done to allow room for any typos or slight discrepancies between how candidates listed their names on the candidate list vs. the voter rolls. 
+The merge of databases is done via "fuzzy matching" on the names column with a .1 match system, which means some of the candidates listed in this CSV. file are not exact matches. This was done to allow room for any typos or slight discrepancies between how candidates listed their names on the candidate list vs. the voter rolls.
 
-This does mean there may be some matches that should not be included in the final count. For the final tally we used at The N&O we manually verified the matches in the csv before including them in the project. 
+This does mean there may be some matches that should not be included in the final count. For the final tally we used at The N&O we manually verified the matches in the CSV. file before including them in the final list. 
 
-Some caveats: This list is meant to be comprehensive but may leave out Hispanic or Latino candidates if they did not register to vote or did not include their ethnicity in their voter rolls. 
-
+Some caveats: This list is meant to be comprehensive but may leave out Hispanic or Latino candidates if they did not register to vote (unlikely scenario) or did not include their ethnicity in their voter registration.
 
 ## Download the databases
 Before you run the code, make sure to first download the needed databases.  
