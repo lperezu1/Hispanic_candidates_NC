@@ -1,15 +1,6 @@
 # Hispanic_candidates_NC
 Hispanic candidates in North Carolina for nov. 2022 election 
 
-/ ***************************************************************************
-Ethnic codes
-ethnicity          description
-*******************************************************************************
-HL                 HISPANIC or LATINO
-NL                 NOT HISPANIC or NOT LATINO
-UN                 UNDESIGNATED
-*************************************************************************** /
-
 
 ## Download the databases
 Before you run the code, make sure to first download the needed databases.  
