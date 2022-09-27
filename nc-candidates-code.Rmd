@@ -16,8 +16,8 @@ library(fuzzyjoin)
 
 # Import datasets
 ```{r}
-nc_voter = read.delim("./datasets/ncvoter_Statewide.txt", sep = "\t")
-candidates <- read_csv("./datasets/Candidate_Listing_2022.csv")
+nc_voter = read.delim("./ncvoter_Statewide.txt", sep = "\t")
+candidates <- read_csv("./Candidate_Listing_2022.csv")
 ```
 
 # Filtering nc_voters for soley Hispanic or latino candidates and filtering candidates database for solely Nov.8 election
