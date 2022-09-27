@@ -1,7 +1,7 @@
 # Hispanic_candidates_NC
 Hispanic candidates in North Carolina for the Nov. 2022 election.  
 
-## The News & Observer did this data project to obtain a statewide list of all Hispanic candidates on the ballot in the Nov. 2022 election. 
+## The News & Observer did this project to obtain a statewide list of all Hispanic or Latino candidates on the ballot in the Nov. 2022 election. 
 
 The N&O obtained this list of candidates by joining the North Carolina State Board of Election's current 'Statewide Voter Registration' database with its '2022 Candidate List Spreadsheet (CSV) (with email addresses)' database.
 
