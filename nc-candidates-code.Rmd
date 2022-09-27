@@ -969,7 +969,7 @@ YANCEY_final_result)
 # Export HISPANIC_CANDIDATES into .csv file
 # In the database exported via the 0.1 match ,there are a few that are not full matches and are actually not matches once manually verified.
 ```{r}
-write.csv(HISPANIC_CANDIDATES, file = "HISPANIC_CANDIDATES.csv")
+write.csv(HISPANIC_CANDIDATES, file = "final-results-hl-candidates-nov-22.csv")
 ```
 
 
