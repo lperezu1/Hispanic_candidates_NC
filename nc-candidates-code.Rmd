@@ -1,0 +1,987 @@
+---
+title: "nc-candidates-code"
+output: html_document
+date: "2022-09-06"
+---
+
+# Install libraries
+```{r}
+install.packages("tidyverse")
+install.packages("fuzzyjoin")
+install.packages("dplyr")
+library(tidyverse)
+library(dplyr)
+library(fuzzyjoin)
+```
+
+# Import datasets
+```{r}
+nc_voter = read.delim("./datasets/ncvoter_Statewide.txt", sep = "\t")
+candidates <- read_csv("./datasets/Candidate_Listing_2022.csv")
+```
+
+# Filtering nc_voters for soley Hispanic or latino candidates and filtering candidates database for solely Nov.8 election
+```{r}
+HL_ncvoter <- filter(nc_voter, ethnic_code == "HL")
+rdate_candidates <- filter(candidates, election_dt == "11/08/2022")
+rm(nc_voter, candidates)
+```
+
+# Create a new column in each dataset, rdate_candidates and HL_ncvoter, called full_name which joins columns: first_name + middle_name + last_name
+```{r}
+rdate_candidates$full_name = paste(rdate_candidates$first_name, rdate_candidates$middle_name,sep=" ")
+rdate_candidates$full_name = paste(rdate_candidates$full_name, rdate_candidates$last_name,sep=" ")
+
+HL_ncvoter$full_name = paste(HL_ncvoter$first_name, HL_ncvoter$middle_name,sep=" ")
+HL_ncvoter$full_name = paste(HL_ncvoter$full_name, HL_ncvoter$last_name,sep=" ")
+```
+
+# chunks databases by county HL_ncvoters
+```{r}
+# The unique function picks each unique county and then creates and array with them [ALAMANACE, ...] 
+arr_county <- unique(HL_ncvoter$county_desc)
+for(i in 1:length(arr_county)) {
+  county_name <- paste(arr_county[i], "_ncvoters",sep = "") 
+  assign(county_name, HL_ncvoter %>% filter(county_desc == arr_county[i])) # Create dataset filtered by county
+}
+# This loop splits the voters database by counties to avoid an overload of information when the data is fuzzy joined with the candidate list. This way allows the function to simply join county by county.
+
+```
+
+
+# chunks databases by county rdate_candidates
+```{r}
+arr_county_c <- unique(rdate_candidates$county_name)
+for(i in 1:length(arr_county_c)) {
+  county_name_c <- paste(arr_county_c[i], "_candidates",sep = "")
+  assign(county_name_c, rdate_candidates  %>% filter(county_name == arr_county_c[i]))
+}
+```
+
+# Fuzzy join by full_name for each county - https://www.statology.org/fuzzy-matching-in-r/
+# If the value in max_dist were zero that would mean there was a perfect match between the full name columns in each database.
+```{r}
+# Fuzzy join for ALAMANCE 1
+ALAMANCE_final_result <- stringdist_join(ALAMANCE_candidates, ALAMANCE_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+# ALAMANCE_final_result <- filter(ALAMANCE_final_result, ethnic_code == "HL")
+rm(ALAMANCE_candidates, ALAMANCE_ncvoters)
+
+
+# Fuzzy join for ALEXANDER 2
+ALEXANDER_final_result <- stringdist_join(ALEXANDER_candidates, ALEXANDER_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+ALEXANDER_final_result <- filter(ALEXANDER_final_result, ethnic_code == "HL")
+rm(ALEXANDER_candidates, ALEXANDER_ncvoters)
+
+
+# Fuzzy join for ALLEGHANY 4
+ALLEGHANY_final_result <- stringdist_join(ALLEGHANY_candidates, ALLEGHANY_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+ALLEGHANY_final_result <- filter(ALLEGHANY_final_result, ethnic_code == "HL")
+rm(ALLEGHANY_candidates, ALLEGHANY_ncvoters)
+
+
+# Fuzzy join for ANSON 5
+ANSON_final_result <- stringdist_join(ANSON_candidates, ANSON_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+ANSON_final_result <- filter(ANSON_final_result, ethnic_code == "HL")
+rm(ANSON_candidates, ANSON_ncvoters)
+
+
+# Fuzzy join for ASHE 6
+
+ASHE_final_result <- stringdist_join(ASHE_candidates, ASHE_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+ASHE_final_result <- filter(ASHE_final_result, ethnic_code == "HL")
+rm(ASHE_candidates, ASHE_ncvoters)
+
+
+# Fuzzy join for AVERY 7
+
+AVERY_final_result <- stringdist_join(AVERY_candidates, AVERY_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+AVERY_final_result <- filter(AVERY_final_result, ethnic_code == "HL")
+rm(AVERY_candidates, AVERY_ncvoters)
+
+
+# Fuzzy join for BEAUFORT 9
+
+BEAUFORT_final_result <- stringdist_join(BEAUFORT_candidates, BEAUFORT_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+BEAUFORT_final_result <- filter(BEAUFORT_final_result, ethnic_code == "HL")
+rm(BEAUFORT_candidates, BEAUFORT_ncvoters)
+
+
+# Fuzzy join for BERTIE 10
+
+BERTIE_final_result <- stringdist_join(BERTIE_candidates, BERTIE_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+BERTIE_final_result <- filter(BERTIE_final_result, ethnic_code == "HL")
+rm(BERTIE_candidates, BERTIE_ncvoters)
+
+
+# Fuzzy join for BLADEN 12
+
+BLADEN_final_result <- stringdist_join(BLADEN_candidates, BLADEN_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+BLADEN_final_result <- filter(BLADEN_final_result, ethnic_code == "HL")
+rm(BLADEN_candidates, BLADEN_ncvoters)
+
+
+# Fuzzy join for BRUNSWICK 13
+
+BRUNSWICK_final_result <- stringdist_join(BRUNSWICK_candidates, BRUNSWICK_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+BRUNSWICK_final_result <- filter(BRUNSWICK_final_result, ethnic_code == "HL")
+rm(BRUNSWICK_candidates, BRUNSWICK_ncvoters)
+
+
+# Fuzzy join for BUNCOMBE 14
+
+BUNCOMBE_final_result <- stringdist_join(BUNCOMBE_candidates, BUNCOMBE_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+BUNCOMBE_final_result <- filter(BUNCOMBE_final_result, ethnic_code == "HL")
+rm(BUNCOMBE_candidates, BUNCOMBE_ncvoters)
+
+
+# Fuzzy join for BURKE 15
+
+BURKE_final_result <- stringdist_join(BURKE_candidates, BURKE_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+BURKE_final_result <- filter(BURKE_final_result, ethnic_code == "HL")
+rm(BURKE_candidates, BURKE_ncvoters)
+
+
+# Fuzzy join for CABARRUS 16
+
+CABARRUS_final_result <- stringdist_join(CABARRUS_candidates, CABARRUS_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+CABARRUS_final_result <- filter(CABARRUS_final_result, ethnic_code == "HL")
+rm(CABARRUS_candidates, CABARRUS_ncvoters)
+
+
+# Fuzzy join for CALDWELL 17
+
+CALDWELL_final_result <- stringdist_join(CALDWELL_candidates, CALDWELL_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+CALDWELL_final_result <- filter(CALDWELL_final_result, ethnic_code == "HL")
+rm(CALDWELL_candidates, CALDWELL_ncvoters)
+
+
+# Fuzzy join for CAMDEN 18
+
+CAMDEN_final_result <- stringdist_join(CAMDEN_candidates, CAMDEN_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+CAMDEN_final_result <- filter(CAMDEN_final_result, ethnic_code == "HL")
+rm(CAMDEN_candidates, CAMDEN_ncvoters)
+
+
+# Fuzzy join for CARTERET 19
+
+CARTERET_final_result <- stringdist_join(CARTERET_candidates, CARTERET_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+CARTERET_final_result <- filter(CARTERET_final_result, ethnic_code == "HL")
+rm(CARTERET_candidates, CARTERET_ncvoters)
+
+
+# Fuzzy join for CASWELL 20
+
+CASWELL_final_result <- stringdist_join(CASWELL_candidates, CASWELL_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+CASWELL_final_result <- filter(CASWELL_final_result, ethnic_code == "HL")
+rm(CASWELL_candidates, CASWELL_ncvoters)
+
+
+# Fuzzy join for CATAWBA 21
+
+CATAWBA_final_result <- stringdist_join(CATAWBA_candidates, CATAWBA_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+CATAWBA_final_result <- filter(CATAWBA_final_result, ethnic_code == "HL")
+rm(CATAWBA_candidates, CATAWBA_ncvoters)
+
+
+# Fuzzy join for CHATHAM 22
+
+CHATHAM_final_result <- stringdist_join(CHATHAM_candidates, CHATHAM_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+CHATHAM_final_result <- filter(CHATHAM_final_result, ethnic_code == "HL")
+rm(CHATHAM_candidates, CHATHAM_ncvoters)
+
+
+# Fuzzy join for CHEROKEE 23
+
+CHEROKEE_final_result <- stringdist_join(CHEROKEE_candidates, CHEROKEE_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+CHEROKEE_final_result <- filter(CHEROKEE_final_result, ethnic_code == "HL")
+rm(CHEROKEE_candidates, CHEROKEE_ncvoters)
+
+
+# Fuzzy join for CHOWAN 24
+
+CHOWAN_final_result <- stringdist_join(CHOWAN_candidates, CHOWAN_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+CHOWAN_final_result <- filter(CHOWAN_final_result, ethnic_code == "HL")
+rm(CHOWAN_candidates, CHOWAN_ncvoters)
+
+
+# Fuzzy join for CLAY 25
+
+CLAY_final_result <- stringdist_join(CLAY_candidates, CLAY_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+CLAY_final_result <- filter(CLAY_final_result, ethnic_code == "HL")
+rm(CLAY_candidates, CLAY_ncvoters)
+
+
+# Fuzzy join for CLEVELAND 26
+
+CLEVELAND_final_result <- stringdist_join(CLEVELAND_candidates, CLEVELAND_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+CLEVELAND_final_result <- filter(CLEVELAND_final_result, ethnic_code == "HL")
+rm(CLEVELAND_candidates, CLEVELAND_ncvoters)
+
+
+# Fuzzy join for COLUMBUS 27
+
+COLUMBUS_final_result <- stringdist_join(COLUMBUS_candidates, COLUMBUS_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+COLUMBUS_final_result <- filter(COLUMBUS_final_result, ethnic_code == "HL")
+rm(COLUMBUS_candidates, COLUMBUS_ncvoters)
+
+
+# Fuzzy join for CRAVEN 28
+
+CRAVEN_final_result <- stringdist_join(CRAVEN_candidates, CRAVEN_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+CRAVEN_final_result <- filter(CRAVEN_final_result, ethnic_code == "HL")
+rm(CRAVEN_candidates, CRAVEN_ncvoters)
+
+
+# Fuzzy join for CUMBERLAND 29
+
+CUMBERLAND_final_result <- stringdist_join(CUMBERLAND_candidates, CUMBERLAND_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+CUMBERLAND_final_result <- filter(CUMBERLAND_final_result, ethnic_code == "HL")
+rm(CUMBERLAND_candidates, CUMBERLAND_ncvoters)
+
+
+# Fuzzy join for CURRITUCK 30
+
+CURRITUCK_final_result <- stringdist_join(CURRITUCK_candidates, CURRITUCK_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+CURRITUCK_final_result <- filter(CURRITUCK_final_result, ethnic_code == "HL")
+rm(CURRITUCK_candidates, CURRITUCK_ncvoters)
+
+
+# Fuzzy join for DARE 31
+
+DARE_final_result <- stringdist_join(DARE_candidates, DARE_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+DARE_final_result <- filter(DARE_final_result, ethnic_code == "HL")
+rm(DARE_candidates, DARE_ncvoters)
+
+
+# Fuzzy join for DAVIDSON 32
+
+DAVIDSON_final_result <- stringdist_join(DAVIDSON_candidates, DAVIDSON_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+DAVIDSON_final_result <- filter(DAVIDSON_final_result, ethnic_code == "HL")
+rm(DAVIDSON_candidates, DAVIDSON_ncvoters)
+
+
+# Fuzzy join for DAVIE 33
+
+DAVIE_final_result <- stringdist_join(DAVIE_candidates, DAVIE_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+DAVIE_final_result <- filter(DAVIE_final_result, ethnic_code == "HL")
+rm(DAVIE_candidates, DAVIE_ncvoters)
+
+
+# Fuzzy join for DUPLIN 34
+
+DUPLIN_final_result <- stringdist_join(DUPLIN_candidates, DUPLIN_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+DUPLIN_final_result <- filter(DUPLIN_final_result, ethnic_code == "HL")
+rm(DUPLIN_candidates, DUPLIN_ncvoters)
+
+
+# Fuzzy join for DURHAM 35
+
+DURHAM_final_result <- stringdist_join(DURHAM_candidates, DURHAM_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+DURHAM_final_result <- filter(DURHAM_final_result, ethnic_code == "HL")
+rm(DURHAM_candidates, DURHAM_ncvoters)
+
+
+# Fuzzy join for EDGECOMBE 36
+
+EDGECOMBE_final_result <- stringdist_join(EDGECOMBE_candidates, EDGECOMBE_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+EDGECOMBE_final_result <- filter(EDGECOMBE_final_result, ethnic_code == "HL")
+rm(EDGECOMBE_candidates, EDGECOMBE_ncvoters)
+
+
+# Fuzzy join for FORSYTH 37
+
+FORSYTH_final_result <- stringdist_join(FORSYTH_candidates, FORSYTH_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+FORSYTH_final_result <- filter(FORSYTH_final_result, ethnic_code == "HL")
+rm(FORSYTH_candidates, FORSYTH_ncvoters)
+
+
+# Fuzzy join for FRANKLIN 38
+
+FRANKLIN_final_result <- stringdist_join(FRANKLIN_candidates, FRANKLIN_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+FRANKLIN_final_result <- filter(FRANKLIN_final_result, ethnic_code == "HL")
+rm(FRANKLIN_candidates, FRANKLIN_ncvoters)
+
+
+# Fuzzy join for GASTON 39
+
+GASTON_final_result <- stringdist_join(GASTON_candidates, GASTON_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+GASTON_final_result <- filter(GASTON_final_result, ethnic_code == "HL")
+rm(GASTON_candidates, GASTON_ncvoters)
+
+
+# Fuzzy join for GATES 40
+
+GATES_final_result <- stringdist_join(GATES_candidates, GATES_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+GATES_final_result <- filter(GATES_final_result, ethnic_code == "HL")
+rm(GATES_candidates, GATES_ncvoters)
+
+
+# Fuzzy join for GRAHAM 41
+
+GRAHAM_final_result <- stringdist_join(GRAHAM_candidates, GRAHAM_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+GRAHAM_final_result <- filter(GRAHAM_final_result, ethnic_code == "HL")
+rm(GRAHAM_candidates, GRAHAM_ncvoters)
+
+
+# Fuzzy join for GRANVILLE 42
+
+GRANVILLE_final_result <- stringdist_join(GRANVILLE_candidates, GRANVILLE_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+GRANVILLE_final_result <- filter(GRANVILLE_final_result, ethnic_code == "HL")
+rm(GRANVILLE_candidates, GRANVILLE_ncvoters)
+
+
+# Fuzzy join for GREENE 43
+
+GREENE_final_result <- stringdist_join(GREENE_candidates, GREENE_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+GREENE_final_result <- filter(GREENE_final_result, ethnic_code == "HL")
+rm(GREENE_candidates, GREENE_ncvoters)
+
+
+# Fuzzy join for GUILFORD 44
+
+GUILFORD_final_result <- stringdist_join(GUILFORD_candidates, GUILFORD_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+GUILFORD_final_result <- filter(GUILFORD_final_result, ethnic_code == "HL")
+rm(GUILFORD_candidates, GUILFORD_ncvoters)
+
+
+# Fuzzy join for HALIFAX 45
+
+HALIFAX_final_result <- stringdist_join(HALIFAX_candidates, HALIFAX_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+HALIFAX_final_result <- filter(HALIFAX_final_result, ethnic_code == "HL")
+rm(HALIFAX_candidates, HALIFAX_ncvoters)
+
+
+# Fuzzy join for HARNETT 46
+
+HARNETT_final_result <- stringdist_join(HARNETT_candidates, HARNETT_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+HARNETT_final_result <- filter(HARNETT_final_result, ethnic_code == "HL")
+rm(HARNETT_candidates, HARNETT_ncvoters)
+
+
+# Fuzzy join for HAYWOOD 47
+
+HAYWOOD_final_result <- stringdist_join(HAYWOOD_candidates, HAYWOOD_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+HAYWOOD_final_result <- filter(HAYWOOD_final_result, ethnic_code == "HL")
+rm(HAYWOOD_candidates, HAYWOOD_ncvoters)
+
+
+# Fuzzy join for HENDERSON 48
+
+HENDERSON_final_result <- stringdist_join(HENDERSON_candidates, HENDERSON_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+HENDERSON_final_result <- filter(HENDERSON_final_result, ethnic_code == "HL")
+rm(HENDERSON_candidates, HENDERSON_ncvoters)
+
+
+# Fuzzy join for HERTFORD 49
+
+HERTFORD_final_result <- stringdist_join(HERTFORD_candidates, HERTFORD_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+HERTFORD_final_result <- filter(HERTFORD_final_result, ethnic_code == "HL")
+rm(HERTFORD_candidates, HERTFORD_ncvoters)
+
+
+# Fuzzy join for HOKE 50
+
+HOKE_final_result <- stringdist_join(HOKE_candidates, HOKE_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+HOKE_final_result <- filter(HOKE_final_result, ethnic_code == "HL")
+rm(HOKE_candidates, HOKE_ncvoters)
+
+
+# Fuzzy join for HYDE 51
+
+HYDE_final_result <- stringdist_join(HYDE_candidates, HYDE_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+HYDE_final_result <- filter(HYDE_final_result, ethnic_code == "HL")
+rm(HYDE_candidates, HYDE_ncvoters)
+
+
+# Fuzzy join for IREDELL 52
+
+IREDELL_final_result <- stringdist_join(IREDELL_candidates, IREDELL_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+IREDELL_final_result <- filter(IREDELL_final_result, ethnic_code == "HL")
+rm(IREDELL_candidates, IREDELL_ncvoters)
+
+
+# Fuzzy join for JACKSON 53
+
+JACKSON_final_result <- stringdist_join(JACKSON_candidates, JACKSON_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+JACKSON_final_result <- filter(JACKSON_final_result, ethnic_code == "HL")
+rm(JACKSON_candidates, JACKSON_ncvoters)
+
+
+# Fuzzy join for JOHNSTON 53
+
+JOHNSTON_final_result <- stringdist_join(JOHNSTON_candidates, JOHNSTON_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+JOHNSTON_final_result <- filter(JOHNSTON_final_result, ethnic_code == "HL")
+rm(JOHNSTON_candidates, JOHNSTON_ncvoters)
+
+
+# Fuzzy join for JONES 54
+
+JONES_final_result <- stringdist_join(JONES_candidates, JONES_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+JONES_final_result <- filter(JONES_final_result, ethnic_code == "HL")
+rm(JONES_candidates, JONES_ncvoters)
+
+
+# Fuzzy join for LEE 55
+
+LEE_final_result <- stringdist_join(LEE_candidates, LEE_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+LEE_final_result <- filter(LEE_final_result, ethnic_code == "HL")
+rm(LEE_candidates, LEE_ncvoters)
+
+
+# Fuzzy join for LENOIR 56
+
+LENOIR_final_result <- stringdist_join(LENOIR_candidates, LENOIR_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+LENOIR_final_result <- filter(LENOIR_final_result, ethnic_code == "HL")
+rm(LENOIR_candidates, LENOIR_ncvoters)
+
+
+# Fuzzy join for LINCOLN 57
+
+LINCOLN_final_result <- stringdist_join(LINCOLN_candidates, LINCOLN_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+LINCOLN_final_result <- filter(LINCOLN_final_result, ethnic_code == "HL")
+rm(LINCOLN_candidates, LINCOLN_ncvoters)
+
+
+# Fuzzy join for MACON 58
+
+MACON_final_result <- stringdist_join(MACON_candidates, MACON_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+MACON_final_result <- filter(MACON_final_result, ethnic_code == "HL")
+rm(MACON_candidates, MACON_ncvoters)
+
+
+# Fuzzy join for MADISON 59
+
+MADISON_final_result <- stringdist_join(MADISON_candidates, MADISON_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+MADISON_final_result <- filter(MADISON_final_result, ethnic_code == "HL")
+rm(MADISON_candidates, MADISON_ncvoters)
+
+
+# Fuzzy join for MARTIN 60
+
+MARTIN_final_result <- stringdist_join(MARTIN_candidates, MARTIN_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+MARTIN_final_result <- filter(MARTIN_final_result, ethnic_code == "HL")
+rm(MARTIN_candidates, MARTIN_ncvoters)
+
+
+# Fuzzy join for MCDOWELL 61
+
+MCDOWELL_final_result <- stringdist_join(MCDOWELL_candidates, MCDOWELL_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+MCDOWELL_final_result <- filter(MCDOWELL_final_result, ethnic_code == "HL")
+rm(MCDOWELL_candidates, MCDOWELL_ncvoters)
+
+
+# Fuzzy join for MECKLENBURG 62
+
+MECKLENBURG_final_result <- stringdist_join(MECKLENBURG_candidates, MECKLENBURG_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+MECKLENBURG_final_result <- filter(MECKLENBURG_final_result, ethnic_code == "HL")
+rm(MECKLENBURG_candidates, MECKLENBURG_ncvoters)
+
+
+# Fuzzy join for MITCHELL 63
+
+MITCHELL_final_result <- stringdist_join(MITCHELL_candidates, MITCHELL_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+MITCHELL_final_result <- filter(MITCHELL_final_result, ethnic_code == "HL")
+rm(MITCHELL_candidates, MITCHELL_ncvoters)
+
+
+# Fuzzy join for MONTGOMERY 64
+
+MONTGOMERY_final_result <- stringdist_join(MONTGOMERY_candidates, MONTGOMERY_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+MONTGOMERY_final_result <- filter(MONTGOMERY_final_result, ethnic_code == "HL")
+rm(MONTGOMERY_candidates, MONTGOMERY_ncvoters)
+
+
+# Fuzzy join for MOORE 65
+
+MOORE_final_result <- stringdist_join(MOORE_candidates, MOORE_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+MOORE_final_result <- filter(MOORE_final_result, ethnic_code == "HL")
+rm(MOORE_candidates, MOORE_ncvoters)
+
+
+# Fuzzy join for NASH 66
+
+NASH_final_result <- stringdist_join(NASH_candidates, NASH_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+NASH_final_result <- filter(NASH_final_result, ethnic_code == "HL")
+rm(NASH_candidates, NASH_ncvoters)
+
+
+# Fuzzy join for NEW HANOVER 67
+rm(`NEW HANOVER_candidates`, `NEW HANOVER_ncvoters`)
+assign("NEW_HANOVER_candidates", rdate_candidates  %>% filter(county_name == "NEW HANOVER"))
+assign("NEW_HANOVER_ncvoters", HL_ncvoter %>% filter(county_desc == "NEW HANOVER"))
+NEW_HANOVER_final_result <- stringdist_join(NEW_HANOVER_candidates, NEW_HANOVER_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+NEW_HANOVER_final_result <- filter(NEW_HANOVER_final_result, ethnic_code == "HL")
+rm(`NEW_HANOVER_candidates`, `NEW_HANOVER_ncvoters`)
+
+
+# Fuzzy join for NORTHAMPTON 68
+
+NORTHAMPTON_final_result <- stringdist_join(NORTHAMPTON_candidates, NORTHAMPTON_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+NORTHAMPTON_final_result <- filter(NORTHAMPTON_final_result, ethnic_code == "HL")
+rm(NORTHAMPTON_candidates, NORTHAMPTON_ncvoters)
+
+
+# Fuzzy join for ONSLOW 69
+
+ONSLOW_final_result <- stringdist_join(ONSLOW_candidates, ONSLOW_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+ONSLOW_final_result <- filter(ONSLOW_final_result, ethnic_code == "HL")
+rm(ONSLOW_candidates, ONSLOW_ncvoters)
+
+
+# Fuzzy join for ORANGE 70
+
+ORANGE_final_result <- stringdist_join(ORANGE_candidates, ORANGE_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+ORANGE_final_result <- filter(ORANGE_final_result, ethnic_code == "HL")
+rm(ORANGE_candidates, ORANGE_ncvoters)
+
+
+# Fuzzy join for PAMLICO 71
+
+PAMLICO_final_result <- stringdist_join(PAMLICO_candidates, PAMLICO_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+PAMLICO_final_result <- filter(PAMLICO_final_result, ethnic_code == "HL")
+rm(PAMLICO_candidates, PAMLICO_ncvoters)
+
+
+# Fuzzy join for PASQUOTANK 72
+
+PASQUOTANK_final_result <- stringdist_join(PASQUOTANK_candidates, PASQUOTANK_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+PASQUOTANK_final_result <- filter(PASQUOTANK_final_result, ethnic_code == "HL")
+rm(PASQUOTANK_candidates, PASQUOTANK_ncvoters)
+
+
+# Fuzzy join for PENDER 73
+
+PENDER_final_result <- stringdist_join(PENDER_candidates, PENDER_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+PENDER_final_result <- filter(PENDER_final_result, ethnic_code == "HL")
+rm(PENDER_candidates, PENDER_ncvoters)
+
+
+# Fuzzy join for PERQUIMANS 74
+
+PERQUIMANS_final_result <- stringdist_join(PERQUIMANS_candidates, PERQUIMANS_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+PERQUIMANS_final_result <- filter(PERQUIMANS_final_result, ethnic_code == "HL")
+rm(PERQUIMANS_candidates, PERQUIMANS_ncvoters)
+
+
+# Fuzzy join for PERSON 75
+
+PERSON_final_result <- stringdist_join(PERSON_candidates, PERSON_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+PERSON_final_result <- filter(PERSON_final_result, ethnic_code == "HL")
+rm(PERSON_candidates, PERSON_ncvoters)
+
+
+# Fuzzy join for PITT 76
+
+PITT_final_result <- stringdist_join(PITT_candidates, PITT_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+PITT_final_result <- filter(PITT_final_result, ethnic_code == "HL")
+rm(PITT_candidates, PITT_ncvoters)
+
+
+# Fuzzy join for POLK 77
+
+POLK_final_result <- stringdist_join(POLK_candidates, POLK_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+POLK_final_result <- filter(POLK_final_result, ethnic_code == "HL")
+rm(POLK_candidates, POLK_ncvoters)
+
+
+# Fuzzy join for RANDOLPH 78
+
+RANDOLPH_final_result <- stringdist_join(RANDOLPH_candidates, RANDOLPH_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+RANDOLPH_final_result <- filter(RANDOLPH_final_result, ethnic_code == "HL")
+rm(RANDOLPH_candidates, RANDOLPH_ncvoters)
+
+
+# Fuzzy join for RICHMOND 79
+
+RICHMOND_final_result <- stringdist_join(RICHMOND_candidates, RICHMOND_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+RICHMOND_final_result <- filter(RICHMOND_final_result, ethnic_code == "HL")
+rm(RICHMOND_candidates, RICHMOND_ncvoters)
+
+
+# Fuzzy join for ROBESON 80
+
+ROBESON_final_result <- stringdist_join(ROBESON_candidates, ROBESON_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+ROBESON_final_result <- filter(ROBESON_final_result, ethnic_code == "HL")
+rm(ROBESON_candidates, ROBESON_ncvoters)
+
+
+# Fuzzy join for ROCKINGHAM 81
+
+ROCKINGHAM_final_result <- stringdist_join(ROCKINGHAM_candidates, ROCKINGHAM_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+ROCKINGHAM_final_result <- filter(ROCKINGHAM_final_result, ethnic_code == "HL")
+rm(ROCKINGHAM_candidates, ROCKINGHAM_ncvoters)
+
+
+# Fuzzy join for ROWAN 82
+
+ROWAN_final_result <- stringdist_join(ROWAN_candidates, ROWAN_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+ROWAN_final_result <- filter(ROWAN_final_result, ethnic_code == "HL")
+rm(ROWAN_candidates, ROWAN_ncvoters)
+
+
+# Fuzzy join for RUTHERFORD 83
+
+RUTHERFORD_final_result <- stringdist_join(RUTHERFORD_candidates, RUTHERFORD_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+RUTHERFORD_final_result <- filter(RUTHERFORD_final_result, ethnic_code == "HL")
+rm(RUTHERFORD_candidates, RUTHERFORD_ncvoters)
+
+# Fuzzy join for SAMPSON 84
+
+SAMPSON_final_result <- stringdist_join(SAMPSON_candidates, SAMPSON_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+SAMPSON_final_result <- filter(SAMPSON_final_result, ethnic_code == "HL")
+rm(SAMPSON_candidates, SAMPSON_ncvoters)
+
+
+# Fuzzy join for SCOTLAND 85
+
+SCOTLAND_final_result <- stringdist_join(SCOTLAND_candidates, SCOTLAND_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+SCOTLAND_final_result <- filter(SCOTLAND_final_result, ethnic_code == "HL")
+rm(SCOTLAND_candidates, SCOTLAND_ncvoters)
+
+
+# Fuzzy join for STANLY 86
+
+STANLY_final_result <- stringdist_join(STANLY_candidates, STANLY_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+STANLY_final_result <- filter(STANLY_final_result, ethnic_code == "HL")
+rm(STANLY_candidates, STANLY_ncvoters)
+
+
+# Fuzzy join for STOKES 87
+
+STOKES_final_result <- stringdist_join(STOKES_candidates, STOKES_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+STOKES_final_result <- filter(STOKES_final_result, ethnic_code == "HL")
+rm(STOKES_candidates, STOKES_ncvoters)
+
+
+# Fuzzy join for SURRY 88
+
+SURRY_final_result <- stringdist_join(SURRY_candidates, SURRY_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+SURRY_final_result <- filter(SURRY_final_result, ethnic_code == "HL")
+rm(SURRY_candidates, SURRY_ncvoters)
+
+
+# Fuzzy join for SWAIN 89
+
+SWAIN_final_result <- stringdist_join(SWAIN_candidates, SWAIN_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+SWAIN_final_result <- filter(SWAIN_final_result, ethnic_code == "HL")
+rm(SWAIN_candidates, SWAIN_ncvoters)
+
+
+# Fuzzy join for TRANSYLVANIA 90
+
+TRANSYLVANIA_final_result <- stringdist_join(TRANSYLVANIA_candidates, TRANSYLVANIA_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+TRANSYLVANIA_final_result <- filter(TRANSYLVANIA_final_result, ethnic_code == "HL")
+rm(TRANSYLVANIA_candidates, TRANSYLVANIA_ncvoters)
+
+
+# Fuzzy join for TYRRELL 91
+
+TYRRELL_final_result <- stringdist_join(TYRRELL_candidates, TYRRELL_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+TYRRELL_final_result <- filter(TYRRELL_final_result, ethnic_code == "HL")
+rm(TYRRELL_candidates, TYRRELL_ncvoters)
+
+
+# Fuzzy join for UNION 92
+
+UNION_final_result <- stringdist_join(UNION_candidates, UNION_ncvoters, by='full_name', max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+UNION_final_result <- filter(UNION_final_result, ethnic_code == "HL")
+rm(UNION_candidates, UNION_ncvoters)
+
+
+# Fuzzy join for VANCE 93
+
+VANCE_final_result <- stringdist_join(VANCE_candidates, VANCE_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+VANCE_final_result <- filter(VANCE_final_result, ethnic_code == "HL")
+rm(VANCE_candidates, VANCE_ncvoters)
+
+
+# Fuzzy join for WAKE 94
+
+WAKE_final_result <- stringdist_join(WAKE_candidates, WAKE_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+WAKE_final_result <- filter(WAKE_final_result, ethnic_code == "HL")
+rm(WAKE_candidates, WAKE_ncvoters)
+
+
+# Fuzzy join for WARREN 94
+
+WARREN_final_result <- stringdist_join(WARREN_candidates, WARREN_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+WARREN_final_result <- filter(WARREN_final_result, ethnic_code == "HL")
+rm(WARREN_candidates, WARREN_ncvoters)
+
+
+# Fuzzy join for WASHINGTON 95
+
+WASHINGTON_final_result <- stringdist_join(WASHINGTON_candidates, WASHINGTON_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+WASHINGTON_final_result <- filter(WASHINGTON_final_result, ethnic_code == "HL")
+rm(WASHINGTON_candidates, WASHINGTON_ncvoters)
+
+
+
+# Fuzzy join for WATAUGA 95
+
+WATAUGA_final_result <- stringdist_join(WATAUGA_candidates, WATAUGA_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+WATAUGA_final_result <- filter(WATAUGA_final_result, ethnic_code == "HL")
+rm(WATAUGA_candidates, WATAUGA_ncvoters)
+
+
+# Fuzzy join for WAYNE 96
+
+WAYNE_final_result <- stringdist_join(WAYNE_candidates, WAYNE_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+WAYNE_final_result <- filter(WAYNE_final_result, ethnic_code == "HL")
+rm(WAYNE_candidates, WAYNE_ncvoters)
+
+
+# Fuzzy join for WILKES 97
+
+WILKES_final_result <- stringdist_join(WILKES_candidates, WILKES_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+WILKES_final_result <- filter(WILKES_final_result, ethnic_code == "HL")
+rm(WILKES_candidates, WILKES_ncvoters)
+
+
+# Fuzzy join for WILSON 98
+
+WILSON_final_result <- stringdist_join(WILSON_candidates, WILSON_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+WILSON_final_result <- filter(WILSON_final_result, ethnic_code == "HL")
+rm(WILSON_candidates, WILSON_ncvoters)
+
+
+# Fuzzy join for YADKIN 99
+
+YADKIN_final_result <- stringdist_join(YADKIN_candidates, YADKIN_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+YADKIN_final_result <- filter(YADKIN_final_result, ethnic_code == "HL")
+rm(YADKIN_candidates, YADKIN_ncvoters)
+
+# Fuzzy join for YANCEY 100
+
+YANCEY_final_result <- stringdist_join(YANCEY_candidates, YANCEY_ncvoters, by='full_name',  max_dist=0.1, mode='inner', method = "jw", distance_col='dist')
+YANCEY_final_result <- filter(YANCEY_final_result, ethnic_code == "HL")
+rm(YANCEY_candidates, YANCEY_ncvoters)
+```
+
+
+# Join the results in Hispanic candidates via rbind to get the final list of all candidates for the nov. 2022 race that identified as Hispanic in their voter rolls, then rm (Delete) the chuncks
+```{r}
+HISPANIC_CANDIDATES <- rbind(
+ALAMANCE_final_result,
+ALEXANDER_final_result,
+ALLEGHANY_final_result,
+ANSON_final_result,
+ASHE_final_result,
+AVERY_final_result,
+BEAUFORT_final_result,
+BERTIE_final_result,
+BLADEN_final_result,
+BRUNSWICK_final_result,
+BUNCOMBE_final_result,
+BURKE_final_result,
+CABARRUS_final_result,
+CALDWELL_final_result,
+CAMDEN_final_result,
+CARTERET_final_result,
+CASWELL_final_result,
+CATAWBA_final_result,
+CHATHAM_final_result,
+CHEROKEE_final_result,
+CHOWAN_final_result,
+CLAY_final_result,
+CLEVELAND_final_result,
+COLUMBUS_final_result,
+CRAVEN_final_result,
+CUMBERLAND_final_result,
+CURRITUCK_final_result,
+DARE_final_result,
+DAVIDSON_final_result,
+DAVIE_final_result,
+DUPLIN_final_result,
+DURHAM_final_result,
+EDGECOMBE_final_result,
+FORSYTH_final_result,
+FRANKLIN_final_result,
+GASTON_final_result,
+GATES_final_result,
+GRAHAM_final_result,
+GRANVILLE_final_result,
+GREENE_final_result,
+GUILFORD_final_result,
+HALIFAX_final_result,
+HARNETT_final_result,
+HAYWOOD_final_result,
+HENDERSON_final_result,
+HERTFORD_final_result,
+HOKE_final_result,
+HYDE_final_result,
+IREDELL_final_result,
+JACKSON_final_result,
+JOHNSTON_final_result,
+JONES_final_result,
+LEE_final_result,
+LENOIR_final_result,
+LINCOLN_final_result,
+MACON_final_result,
+MADISON_final_result,
+MARTIN_final_result,
+MCDOWELL_final_result,
+MECKLENBURG_final_result,
+MITCHELL_final_result,
+MONTGOMERY_final_result,
+MOORE_final_result,
+NASH_final_result,
+NEW_HANOVER_final_result,
+NORTHAMPTON_final_result,
+ONSLOW_final_result,
+ORANGE_final_result,
+PAMLICO_final_result,
+PASQUOTANK_final_result,
+PENDER_final_result,
+PERQUIMANS_final_result,
+PERSON_final_result,
+PITT_final_result,
+POLK_final_result,
+RANDOLPH_final_result,
+RICHMOND_final_result,
+ROBESON_final_result,
+ROCKINGHAM_final_result,
+ROWAN_final_result,
+RUTHERFORD_final_result,
+SAMPSON_final_result,
+SCOTLAND_final_result,
+STANLY_final_result,
+STOKES_final_result,
+SURRY_final_result,
+SWAIN_final_result,
+TRANSYLVANIA_final_result,
+TYRRELL_final_result,
+UNION_final_result,
+VANCE_final_result,
+WAKE_final_result,
+WARREN_final_result,
+WASHINGTON_final_result,
+WATAUGA_final_result,
+WAYNE_final_result,
+WILKES_final_result,
+WILSON_final_result,
+YADKIN_final_result,
+YANCEY_final_result)
+
+rm (
+ALAMANCE_final_result,
+ALEXANDER_final_result,
+ALLEGHANY_final_result,
+ANSON_final_result,
+ASHE_final_result,
+AVERY_final_result,
+BEAUFORT_final_result,
+BERTIE_final_result,
+BLADEN_final_result,
+BRUNSWICK_final_result,
+BUNCOMBE_final_result,
+BURKE_final_result,
+CABARRUS_final_result,
+CALDWELL_final_result,
+CAMDEN_final_result,
+CARTERET_final_result,
+CASWELL_final_result,
+CATAWBA_final_result,
+CHATHAM_final_result,
+CHEROKEE_final_result,
+CHOWAN_final_result,
+CLAY_final_result,
+CLEVELAND_final_result,
+COLUMBUS_final_result,
+CRAVEN_final_result,
+CUMBERLAND_final_result,
+CURRITUCK_final_result,
+DARE_final_result,
+DAVIDSON_final_result,
+DAVIE_final_result,
+DUPLIN_final_result,
+DURHAM_final_result,
+EDGECOMBE_final_result,
+FORSYTH_final_result,
+FRANKLIN_final_result,
+GASTON_final_result,
+GATES_final_result,
+GRAHAM_final_result,
+GRANVILLE_final_result,
+GREENE_final_result,
+GUILFORD_final_result,
+HALIFAX_final_result,
+HARNETT_final_result,
+HAYWOOD_final_result,
+HENDERSON_final_result,
+HERTFORD_final_result,
+HOKE_final_result,
+HYDE_final_result,
+IREDELL_final_result,
+JACKSON_final_result,
+JOHNSTON_final_result,
+JONES_final_result,
+LEE_final_result,
+LENOIR_final_result,
+LINCOLN_final_result,
+MACON_final_result,
+MADISON_final_result,
+MARTIN_final_result,
+MCDOWELL_final_result,
+MECKLENBURG_final_result,
+MITCHELL_final_result,
+MONTGOMERY_final_result,
+MOORE_final_result,
+NASH_final_result,
+NEW_HANOVER_final_result,
+NORTHAMPTON_final_result,
+ONSLOW_final_result,
+ORANGE_final_result,
+PAMLICO_final_result,
+PASQUOTANK_final_result,
+PENDER_final_result,
+PERQUIMANS_final_result,
+PERSON_final_result,
+PITT_final_result,
+POLK_final_result,
+RANDOLPH_final_result,
+RICHMOND_final_result,
+ROBESON_final_result,
+ROCKINGHAM_final_result,
+ROWAN_final_result,
+RUTHERFORD_final_result,
+SAMPSON_final_result,
+SCOTLAND_final_result,
+STANLY_final_result,
+STOKES_final_result,
+SURRY_final_result,
+SWAIN_final_result,
+TRANSYLVANIA_final_result,
+TYRRELL_final_result,
+UNION_final_result,
+VANCE_final_result,
+WAKE_final_result,
+WARREN_final_result,
+WASHINGTON_final_result,
+WATAUGA_final_result,
+WAYNE_final_result,
+WILKES_final_result,
+WILSON_final_result,
+YADKIN_final_result,
+YANCEY_final_result)
+```
+
+# Export HISPANIC_CANDIDATES into .csv file
+# In the database exported via the 0.1 match ,there are a few that are not full matches and are actually not matches once manually verified.
+```{r}
+write.csv(HISPANIC_CANDIDATES, file = "HISPANIC_CANDIDATES.csv")
+```
+
+
+
+#------------------------------------------------------------------------------------------------------------------------------------
+
+#                      OTHER OPTION - 100% MATCH BY NAME
+
+# Copy data, match, filter and export.
+```{r}
+candidates_copy <- rdate_candidates
+candidates_copy$ethnic_code <- HL_ncvoter$ethnic_code[match(rdate_candidates$full_name, HL_ncvoter$full_name)]
+other_op <- filter(candidates_copy, ethnic_code == "HL")
+# write.csv(HL_candidates, file = "hl_candidates(3).csv")
+```
