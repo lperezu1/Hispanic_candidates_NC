@@ -7,6 +7,8 @@ The N&O obtained this statewide list of candidates by joining the North Carolina
 
 The candidate list database does not include what ethnicity candidates identify with, while the voter registration database does. This merging of databases cross-checks which candidates identified as Hispanic or Latino in their voter rolls.
 
+To view the final list of candidates you can open the file 'final-results-hl-candidates-nov-22.csv' linked in this project or clone this repository. 
+
 Some caveats: This list is meant to be comprehensive but may leave out Hispanic or Latino candidates if they did not register to vote or did not include their ethnicity in their voter rolls. 
 
 
