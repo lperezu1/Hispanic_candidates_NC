@@ -15,7 +15,7 @@ The merge of databases is done via "fuzzy matching" on the names column with a .
 
 This does mean there may be some matches that should not be included in the final count. For the final tally we used at The N&O we manually verified the matches in the CSV. file before including them in the final list. 
 
-Some caveats: This list is meant to be comprehensive but may leave out Hispanic or Latino candidates if they did not register to vote (unlikely scenario) or did not include their ethnicity in their voter registration.
+Some caveats: This list is meant to be comprehensive but may leave out Hispanic or Latino candidates if they did not include their ethnicity in their voter registration.
 
 ## Download the databases
 Before you run the code, make sure to first download the needed databases.  
