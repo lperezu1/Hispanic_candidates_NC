@@ -1,0 +1,48 @@
+---
+title: "unique-candidates-list"
+output: html_document
+date: "2022-10-05"
+---
+
+# Install libraries
+```{r}
+install.packages("tidyverse")
+install.packages("dplyr")
+library(tidyverse)
+library(dplyr)
+```
+
+# Import datasets
+```{r}
+candidates <- read_csv("./Candidate_Listing_2022.csv")
+```
+
+# Filtering nc_voters for soley Hispanic or latino candidates and filtering candidates database for solely Nov.8 election
+```{r}
+rdate_candidates <- filter(candidates, election_dt == "11/08/2022")
+rm(candidates)
+```
+
+# Create a new column in each dataset, rdate_candidates and HL_ncvoter, called full_name which joins columns: first_name + middle_name + last_name
+```{r}
+rdate_candidates$full_name = paste(rdate_candidates$first_name, rdate_candidates$middle_name,sep=" ")
+rdate_candidates$full_name = paste(rdate_candidates$full_name, rdate_candidates$last_name,sep=" ")
+```
+
+# First option to remove unique candidates: By duplicate full_name
+```{r}
+norep_candidates_st <- rdate_candidates[!duplicated(rdate_candidates$full_name), ]
+```
+
+# Second option to remove unique candidates: By removing county_name column and using distinct() function
+```{r}
+rm_county <- rdate_candidates[,-2]
+norep_candidates_nd <- distinct(rm_county)
+```
+
+# Export databases
+```{r}
+write.csv(norep_candidates_st, file = "norep_candidates_st.csv")
+write.csv(norep_candidates_nd, file = "norep_candidates_nd.csv")
+```
+
